@@ -3,7 +3,6 @@ from tkinter import font
 
 
 class TicTacToe(tk.Tk):
-    """Simple yet polished Tic-Tac-Toe mini-game with a friendly GUI."""
 
     WIN_PATTERNS = (
         (0, 1, 2),
@@ -29,7 +28,6 @@ class TicTacToe(tk.Tk):
         self.preview_index: int | None = None
         self.status_pulse_job: str | None = None
 
-        # Fonts for consistent styling
         self.board_font = font.Font(family="Segoe UI", size=32, weight="bold")
         self.info_font = font.Font(family="Segoe UI", size=12)
         self.title_font = font.Font(family="Segoe UI", size=14, weight="bold")
@@ -38,7 +36,6 @@ class TicTacToe(tk.Tk):
         self._update_status("Player X's turn", accent="#79d279")
 
     def _build_layout(self) -> None:
-        """Create the static layout widgets."""
         outer = tk.Frame(self, bg="#252525", padx=20, pady=20)
         outer.pack()
 
@@ -134,7 +131,6 @@ class TicTacToe(tk.Tk):
         ).grid(row=0, column=1, padx=5)
 
     def _handle_move(self, index: int) -> None:
-        """Handle a player's tap on a board cell."""
         if self.board_state[index] or self._board_locked():
             return
 
@@ -155,7 +151,6 @@ class TicTacToe(tk.Tk):
         self._update_status(f"Player {self.current_player}'s turn", accent="#79d279")
 
     def _preview_move(self, index: int) -> None:
-        """Show a subtle preview of the move while hovering."""
         if self.board_state[index] or self._board_locked():
             return
         btn = self.buttons[index]
@@ -173,7 +168,6 @@ class TicTacToe(tk.Tk):
         self.preview_index = None
 
     def _find_winner(self) -> str | None:
-        """Return 'X' or 'O' if there's a winner, None otherwise."""
         for a, b, c in self.WIN_PATTERNS:
             first = self.board_state[a]
             if first and first == self.board_state[b] == self.board_state[c]:
@@ -183,7 +177,6 @@ class TicTacToe(tk.Tk):
         return None
 
     def _finish_round(self, result: str) -> None:
-        """Handle end-of-round updates."""
         if result == "Draw":
             self._update_status("It's a draw! Hit New Round to play again.", accent="#f2c94c")
         else:
@@ -197,7 +190,6 @@ class TicTacToe(tk.Tk):
             lbl.config(text=f"{key}: {self.score[key]}")
 
     def _reset_board(self) -> None:
-        """Start a new round but keep the score."""
         self.board_state = [""] * 9
         self.current_player = "X"
         self.preview_index = None
@@ -216,17 +208,14 @@ class TicTacToe(tk.Tk):
             btn.config(state="disabled" if locked else "normal")
 
     def _board_locked(self) -> bool:
-        # All buttons share the same state, so checking the first is enough.
         return bool(self.buttons and self.buttons[0]["state"] == "disabled")
 
     def _update_status(self, text: str, accent: str = "#dedede") -> None:
-        """Update and animate the status message."""
         if self.status_pulse_job:
             self.after_cancel(self.status_pulse_job)
         self.status_label.config(text=text, fg=accent)
 
         def pulse(alpha: float = 0.15, direction: int = 1) -> None:
-            # Provide a subtle glow/opacity effect using color blending.
             blend = int(222 + (255 - 222) * alpha)
             color = f"#{blend:02x}{blend:02x}{blend:02x}"
             self.status_label.config(bg=color)
